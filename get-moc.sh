@@ -14,7 +14,7 @@ echo "Create path complete!"
 
 # Get moc from archive data of CESM
 mkdir "$path/month"
-for ((y=1; y<=50; y++))
+for ((y=1; y<=2000; y++))
 do
 	ystr=$y
 	if [ $y -lt 1000 ]; then
@@ -40,7 +40,11 @@ echo "Get moc data complete!"
 # Create .nc to save monthly data and annual mean data
 mkdir "$path/monthly"
 mkdir "$path/annual"
+echo "Start month2year.ncl"
 ncl month2year.ncl
 echo "Create .nc to save monthly data and annual mean data complete!"
 
-
+# Draw maximum series
+echo "Start drawseries.ncl"
+ncl drawseries.ncl
+echo "Draw maximum series complete!"

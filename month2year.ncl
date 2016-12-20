@@ -4,7 +4,7 @@
 begin
 
 	; Traversal 2000 years
-	do y = 1, 50
+	do y = 1, 2000
 		; Change int to string
 		ystr = sprinti("%0.4i", y)
 

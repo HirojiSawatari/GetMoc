@@ -34,23 +34,52 @@ begin
 	; Assign the value to out
 	out->MOCMax = annual_max
 	
+	; Set time
+        time = new((/2000/), float, "No_FillValue")
+        time = ispan(1, 2000, 1)
+
+	; Draw original series
+        wks = gsn_open_wks("png","/gpfsES/geo/the/MocArchieve/Original_Series")
+
+        res = True
+        res@tiMainString = "Maximum of MOC (Original)"
+        res@tiYAxisString = "Meridional Overturning Circulation (Sverdrups)"
+        res@tiXAxisString = "Year"
+        res@xyLineColors = "red"
+        res@vpHeightF = 0.43
+        res@vpWidthF = 0.70
+
+        plot = gsn_xy(wks, time, annual_max, res)
+
 	; Smooth
 	annual_sm = runave(annual_max, 31, 0)	
 
-	; Draw series
-	time = new((/2000/), float, "No_FillValue")
-	time = ispan(1, 2000, 1)
-	
-	wks = gsn_open_wks("png","/gpfsES/geo/the/MocArchieve/Max_Series")
+	; Draw smooth series
+	wks2 = gsn_open_wks("png","/gpfsES/geo/the/MocArchieve/Smooth_Series")
 
-	res = True
-	res@tiMainString = "Maximum of MOC"
-	res@tiYAxisString = "Meridional Overturning Circulation (Sverdrups)"
-	res@tiXAxisString = "Year"
-	res@xyLineColors = "red"
-	res@vpHeightF = 0.43
-	res@vpWidthF = 0.70
+	res2 = True
+	res2@tiMainString = "Maximum of MOC (Smooth)"
+	res2@tiYAxisString = "Meridional Overturning Circulation (Sverdrups)"
+	res2@tiXAxisString = "Year"
+	res2@xyLineColors = "red"
+	res2@vpHeightF = 0.43
+	res2@vpWidthF = 0.70
 	
-	plot = gsn_xy(wks, time, annual_sm, res)
-	
+	plot2 = gsn_xy(wks2, time, annual_sm, res2)
+
+	; Calculate wavelet
+	wave = wavelet_default(annual_max, 0)
+
+	; Draw wavelet series
+        wks3 = gsn_open_wks("png","/gpfsES/geo/the/MocArchieve/Wavelet_Series")
+
+        res3 = True
+        res3@tiMainString = "Wavelet Transform"
+        res3@tiXAxisString = "Year"
+        res3@xyLineColors = "red"
+        res3@vpHeightF = 0.43
+        res3@vpWidthF = 0.70
+
+        plot3 = gsn_xy(wks3, time, wave(0, 0, :), res3)
+        
 end

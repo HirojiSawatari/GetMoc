@@ -1,0 +1,34 @@
+:ygliu: I have modified basin_pop_moc_eul.f90 and basin_pop_moc_ei.f90 slightly
+        because the amask and imask were not defined correctly
+
+EXAMPLE MOC code
+================
+each paleo user needs to modify according to their own region mask 
+if computing basin moc's (i.e. anything other than global). 
+
+
+mocdec.csh -> example shell script to read in history files and
+		create bundled MOC files. compiles and runs moc code.
+		NOTE: user will likely need to modify makefile(s) for
+		local machine.
+
+GNUmakefile or makefile  -> *example* makefiles. will need to modify
+			according to local machine and/or each moc code
+			the user is using.
+
+pop_moc.f90  -> code to compute Eularian component of global MOC
+
+basin_pop_moc_eul.f90  -> example code to compute eularian component to
+			  MOC for user-specific basins. paleo user will
+			  need to modify according to her/his region mask.
+
+basin_pop_moc_ei.f90  -> example code to compute eddy-induced component to
+			  MOC for user-specific basins. paleo user will
+			  need to modify according to her/his region mask.
+
+
+note: total moc = eularian + eddy-induced
+
+
+Note: Fixed a bug at original line 368 of basin_pop_moc_ei.f90
+      Fixed a bug at the end of original line 441-443 of pop_moc.f90

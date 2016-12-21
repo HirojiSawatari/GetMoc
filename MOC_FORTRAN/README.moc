@@ -1,3 +1,5 @@
+:the: This project isn't mine, only for test
+
 :ygliu: I have modified basin_pop_moc_eul.f90 and basin_pop_moc_ei.f90 slightly
         because the amask and imask were not defined correctly
 

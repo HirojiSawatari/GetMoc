@@ -54,6 +54,9 @@ begin
 	; Smooth
 	annual_sm = runave(annual_max, 31, 0)	
 
+	; Get volcanic series
+	vol = addfile("/gpfsES/geo/zywang/Rec_Obs_For_DATA/forcings/volc/IVI2.5_Gao_Sigl_1-2000.nc", "r")
+
 	; Draw smooth series
 	wks2 = gsn_open_wks("png","/gpfsES/geo/the/MocArchieve/Smooth_Series")
 
@@ -68,18 +71,21 @@ begin
 	plot2 = gsn_xy(wks2, time, annual_sm, res2)
 
 	; Calculate wavelet
-	wave = wavelet_default(annual_max, 0)
+	w = wavelet_default(annual_max, 0)
 
 	; Draw wavelet series
-        wks3 = gsn_open_wks("png","/gpfsES/geo/the/MocArchieve/Wavelet_Series")
+        wks3 = gsn_open_wks("png","/gpfsES/geo/the/MocArchieve/Wavelet_Transform")
 
         res3 = True
         res3@tiMainString = "Wavelet Transform"
-        res3@tiXAxisString = "Year"
-        res3@xyLineColors = "red"
+	res3@cnFillOn = True
+	res3@trYReverse = True
+	res3@gsnSpreadColors = True
+	res3@gsnSpreadColorStart = 24
+	res3@gsnSpreadColorEnd = -26
         res3@vpHeightF = 0.43
         res3@vpWidthF = 0.70
 
-        plot3 = gsn_xy(wks3, time, wave(0, 0, :), res3)
+	plot3 = gsn_csm_contour(wks3,w(0,:,:),res3) 
         
 end

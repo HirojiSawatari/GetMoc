@@ -12,7 +12,7 @@ else
 fi
 echo "Create path complete!"
 
-# Get moc from archive data of CESM
+# Get AMOC from archive data of CESM
 mkdir "$path/month"
 for ((y=1; y<=2000; y++))
 do
@@ -35,7 +35,7 @@ do
 		ncks -v MOC $data/MASK.pop.h.$ystr-$mstr.nc $path/month/Moc.$ystr-$mstr.nc
 	done
 done
-echo "Get moc data complete!"
+echo "Get AMOC data complete!"
 
 # Create .nc to save monthly data and annual mean data
 mkdir "$path/monthly"
@@ -47,4 +47,9 @@ echo "Create .nc to save monthly data and annual mean data complete!"
 # Draw maximum series
 echo "Start drawseries.ncl"
 ncl drawseries.ncl
-echo "Draw maximum series complete!"
+echo "Draw maximum series and do wavelet transform complete!"
+
+# Draw volcanic series
+echo "Start volseries.ncl"
+ncl volseries.ncl
+echo "Draw volcanic series complete!"

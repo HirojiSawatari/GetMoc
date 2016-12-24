@@ -50,8 +50,3 @@ echo "Create .nc to save monthly data and annual mean data of TSI complete!"
 echo "Start drawseries_TSI.ncl"
 ncl drawseries_TSI.ncl
 echo "Draw maximum series and do wavelet transform of TSI complete!"
-
-# Draw volcanic series
-echo "Start volseries.ncl"
-ncl volseries.ncl
-echo "Draw volcanic series complete!"

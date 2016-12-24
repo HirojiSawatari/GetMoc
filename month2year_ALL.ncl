@@ -9,18 +9,18 @@ begin
 		ystr = sprinti("%0.4i", y)
 
 		; Open monthly files
-		f1 = addfile("/gpfsES/geo/the/MocArchieve/month/Moc." + ystr + "-01.nc", "r")
-		f2 = addfile("/gpfsES/geo/the/MocArchieve/month/Moc." + ystr + "-02.nc", "r")
-	        f3 = addfile("/gpfsES/geo/the/MocArchieve/month/Moc." + ystr + "-03.nc", "r")
-	        f4 = addfile("/gpfsES/geo/the/MocArchieve/month/Moc." + ystr + "-04.nc", "r")
-	        f5 = addfile("/gpfsES/geo/the/MocArchieve/month/Moc." + ystr + "-05.nc", "r")
-	        f6 = addfile("/gpfsES/geo/the/MocArchieve/month/Moc." + ystr + "-06.nc", "r")
-	        f7 = addfile("/gpfsES/geo/the/MocArchieve/month/Moc." + ystr + "-07.nc", "r")
-	        f8 = addfile("/gpfsES/geo/the/MocArchieve/month/Moc." + ystr + "-08.nc", "r")
-	        f9 = addfile("/gpfsES/geo/the/MocArchieve/month/Moc." + ystr + "-09.nc", "r")
-	        f10 = addfile("/gpfsES/geo/the/MocArchieve/month/Moc." + ystr + "-10.nc", "r")
-       		f11 = addfile("/gpfsES/geo/the/MocArchieve/month/Moc." + ystr + "-11.nc", "r")
-       		f12 = addfile("/gpfsES/geo/the/MocArchieve/month/Moc." + ystr + "-12.nc", "r")
+		f1 = addfile("/gpfsES/geo/the/MocArchieve/ALL/month/Moc.ALL." + ystr + "-01.nc", "r")
+		f2 = addfile("/gpfsES/geo/the/MocArchieve/ALL/month/Moc.ALL." + ystr + "-02.nc", "r")
+	        f3 = addfile("/gpfsES/geo/the/MocArchieve/ALL/month/Moc.ALL." + ystr + "-03.nc", "r")
+	        f4 = addfile("/gpfsES/geo/the/MocArchieve/ALL/month/Moc.ALL." + ystr + "-04.nc", "r")
+	        f5 = addfile("/gpfsES/geo/the/MocArchieve/ALL/month/Moc.ALL." + ystr + "-05.nc", "r")
+	        f6 = addfile("/gpfsES/geo/the/MocArchieve/ALL/month/Moc.ALL." + ystr + "-06.nc", "r")
+	        f7 = addfile("/gpfsES/geo/the/MocArchieve/ALL/month/Moc.ALL." + ystr + "-07.nc", "r")
+	        f8 = addfile("/gpfsES/geo/the/MocArchieve/ALL/month/Moc.ALL." + ystr + "-08.nc", "r")
+	        f9 = addfile("/gpfsES/geo/the/MocArchieve/ALL/month/Moc.ALL." + ystr + "-09.nc", "r")
+	        f10 = addfile("/gpfsES/geo/the/MocArchieve/ALL/month/Moc.ALL." + ystr + "-10.nc", "r")
+       		f11 = addfile("/gpfsES/geo/the/MocArchieve/ALL/month/Moc.ALL." + ystr + "-11.nc", "r")
+       		f12 = addfile("/gpfsES/geo/the/MocArchieve/ALL/month/Moc.ALL." + ystr + "-12.nc", "r")
 
 		MOC = f1->MOC
 		moc_z = f1->moc_z
@@ -105,8 +105,8 @@ begin
 		new_monthly@units = "Sverdrups"
 	
 		; Create a new .nc to save monthly file
-		system("rm -f /gpfsES/geo/the/MocArchieve/monthly/Moc.monthly." + ystr + ".nc")
-		out = addfile("/gpfsES/geo/the/MocArchieve/monthly/Moc.monthly." + ystr + ".nc", "c")
+		system("rm -f /gpfsES/geo/the/MocArchieve/ALL/monthly/Moc.ALL.monthly." + ystr + ".nc")
+		out = addfile("/gpfsES/geo/the/MocArchieve/ALL/monthly/Moc.ALL.monthly." + ystr + ".nc", "c")
 	
 		; Assign the value to out
 		out->MOC = new_monthly
@@ -142,8 +142,8 @@ begin
                 annual@units = "Sverdrups"
 
 		; Create a new .nc to save monthly file
-                system("rm -f /gpfsES/geo/the/MocArchieve/annual/Moc.annual." + ystr + ".nc")
-                out2 = addfile("/gpfsES/geo/the/MocArchieve/annual/Moc.annual." + ystr + ".nc", "c")
+                system("rm -f /gpfsES/geo/the/MocArchieve/ALL/annual/Moc.ALL.annual." + ystr + ".nc")
+                out2 = addfile("/gpfsES/geo/the/MocArchieve/ALL/annual/Moc.ALL.annual." + ystr + ".nc", "c")
 
 		; Assign the value to out
                 out2->MOC = annual

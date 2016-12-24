@@ -6,13 +6,13 @@ begin
 	; Create new varible to save annual maximum data
 	annual_max = new((/2000/), float, "No_FillValue")
 
-	; Traversal 2000 years
-        do y = 1, 2000
+	; Traversal 1500 years (VOL HAS ONLY 1500 YEARS)
+        do y = 501, 2000
 		; Change int to string
                 ystr = sprinti("%0.4i", y)
 
 		; Open annual mean file
-		f = addfile("/gpfsES/geo/the/MocArchieve/annual/Moc.annual." + ystr + ".nc", "r")
+		f = addfile("/gpfsES/geo/the/MocArchieve/VOL/annual/Moc.VOL.annual." + ystr + ".nc", "r")
 		
 		MOC = f->MOC
 		
@@ -28,8 +28,8 @@ begin
         annual_max@units = "Sverdrups"
 
 	; Create a new .nc to save maximum file
-        system("rm -f /gpfsES/geo/the/MocArchieve/Moc.maximum.nc")
-        out = addfile("/gpfsES/geo/the/MocArchieve/Moc.maximum.nc", "c")
+        system("rm -f /gpfsES/geo/the/MocArchieve/VOL/Moc.maximum.nc")
+        out = addfile("/gpfsES/geo/the/MocArchieve/VOL/Moc.maximum.nc", "c")
 	
 	; Assign the value to out
 	out->MOCMax = annual_max
@@ -70,7 +70,7 @@ begin
         output@wkHeight = 1080
 	
 	; Draw original series
-        wks = gsn_open_wks(output, "/gpfsES/geo/the/MocArchieve/Original_Series")
+        wks = gsn_open_wks(output, "/gpfsES/geo/the/MocArchieve/VOL/Original_Series")
 
         resL = True
         resL@tiMainString = "Maximum of MOC (Original)"
@@ -96,7 +96,7 @@ begin
 	vol = addfile("/gpfsES/geo/zywang/Rec_Obs_For_DATA/forcings/volc/IVI2.5_Gao_Sigl_1-2000.nc", "r")
 
 	; Draw smooth series
-	wks2 = gsn_open_wks(output, "/gpfsES/geo/the/MocArchieve/Smooth_Series")
+	wks2 = gsn_open_wks(output, "/gpfsES/geo/the/MocArchieve/VOL/Smooth_Series")
 
 	resL2 = True
 	resL2@tiMainString = "Maximum of MOC (Smooth)"
@@ -121,7 +121,7 @@ begin
 	; Draw wavelet transform
 	map = new(2,graphic)
 	
-        wks3 = gsn_open_wks(output, "/gpfsES/geo/the/MocArchieve/Wavelet_Transform")
+        wks3 = gsn_open_wks(output, "/gpfsES/geo/the/MocArchieve/VOL/Wavelet_Transform")
 
         res3 = True
         res3@tiMainString = "Wavelet Transform"

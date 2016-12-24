@@ -79,21 +79,22 @@ begin
         resL@xyLineColors = "blue"
         resL@vpHeightF = 0.43
         resL@vpWidthF = 0.65
+        resL@trXMinF = 500
+        resL@trXMaxF = 2000
 	resL@vpXF = 0.15
 
 	resR = True
 	resR@tiYAxisString = "Volcanic Aerosol Mass Mixing Ratio"
         resR@trYMinF = 0
         resR@trYMaxF = 0.00000008
+        resR@trXMinF = 500
+        resR@trXMaxF = 2000
         resR@xyLineColors = "red"
 
-        plot = gsn_csm_x2y2(wks, time, time2, annual_max, volc_global, resL, resR)
+        plot = gsn_csm_x2y2(wks, time(500:), time2(500:), annual_max(500:), volc_global(500:), resL, resR)
 
 	; Smooth
-	annual_sm = runave(annual_max, 31, 0)	
-
-	; Get volcanic series
-	vol = addfile("/gpfsES/geo/zywang/Rec_Obs_For_DATA/forcings/volc/IVI2.5_Gao_Sigl_1-2000.nc", "r")
+	annual_sm = runave(annual_max(500:), 31, 0)	
 
 	; Draw smooth series
 	wks2 = gsn_open_wks(output, "/gpfsES/geo/the/MocArchieve/VOL/Smooth_Series")
@@ -105,18 +106,22 @@ begin
 	resL2@xyLineColors = "blue"
 	resL2@vpHeightF = 0.43
 	resL2@vpWidthF = 0.65
+        resL2@trXMinF = 500
+        resL2@trXMaxF = 2000
 	resL2@vpXF = 0.15
 
 	resR2 = True
 	resR2@tiYAxisString = "Volcanic Aerosol Mass Mixing Ratio"
         resR2@trYMinF = 0
         resR2@trYMaxF = 0.00000008
+	resR2@trXMinF = 500
+        resR2@trXMaxF = 2000
         resR2@xyLineColors = "red"
 	
-	plot2 = gsn_csm_x2y2(wks2, time, time2, annual_sm, volc_global, resL2, resR2)
+	plot2 = gsn_csm_x2y2(wks2, time(500:), time2(500:), annual_sm, volc_global(500:), resL2, resR2)
 
 	; Calculate wavelet
-	w = wavelet_default(annual_max, 0)
+	w = wavelet_default(annual_max(500:), 0)
 
 	; Draw wavelet transform
 	map = new(2,graphic)
@@ -142,9 +147,11 @@ begin
         res4@xyLineColors = "red"
 	res4@vpHeightF = 0.1
         res4@vpWidthF = 0.65
+        res4@trXMinF = 0
+        res4@trXMaxF = 2000
 	res4@vpXF = 0.15
 
-	map(1) = gsn_xy(wks3, time2, volc_global, res4)
+	map(1) = gsn_xy(wks3, time2(500:), volc_global(500:), res4)
         
 	yres = True
 

@@ -12,7 +12,7 @@ begin
                 ystr = sprinti("%0.4i", y)
 
 		; Open annual mean file
-		f = addfile("/gpfsES/geo/the/MocArchieve/ALL/annual/Moc.ALL.annual." + ystr + ".nc", "r")
+		f = addfile("/gpfsES/geo/the/MocArchieve/ANTH/annual/Moc.ANTH.annual." + ystr + ".nc", "r")
 		
 		MOC = f->MOC
 		
@@ -28,8 +28,8 @@ begin
         annual_max@units = "Sverdrups"
 
 	; Create a new .nc to save maximum file
-        system("rm -f /gpfsES/geo/the/MocArchieve/ALL/Moc.maximum.nc")
-        out = addfile("/gpfsES/geo/the/MocArchieve/ALL/Moc.maximum.nc", "c")
+        system("rm -f /gpfsES/geo/the/MocArchieve/ANTH/Moc.maximum.nc")
+        out = addfile("/gpfsES/geo/the/MocArchieve/ANTH/Moc.maximum.nc", "c")
 	
 	; Assign the value to out
 	out->MOCMax = annual_max
@@ -38,31 +38,21 @@ begin
         time = new((/2000/), float, "No_FillValue")
         time = ispan(1, 2000, 1)
 
-	; Create new varible to save volcanic data
-        volc_global = new((/24000/), double, "No_FillValue")
-        volc_north = new((/24000/), double, "No_FillValue")
-        volc_south = new((/24000/), double, "No_FillValue")
+        ; Open GHGs file
+        g = addfile("/gpfsES/geo/zywang/Rec_Obs_For_DATA/forcings/ghgs/GHG.nc", "r")
 
-        ; Open volcanic file
-        v = addfile("/gpfsES/geo/zywang/Rec_Obs_For_DATA/forcings/volc/IVI2.5_Gao_Sigl_1-2000.nc", "r")
+	; Create new varible to save GHGs data
+        ghg = new((/2003/), double, "No_FillValue")
 
-        ; volc(time=24002, lev=18, lat=64)
-        volc = v->MMRVOLC
-        time2 = v->time
-        lat = v->lat
+        ; ANTH(time=2003)
+        ch4 = g->CH4
+	co2 = g->CO2
+	n2o = g->N2O
+        time2 = g->time
 
-        ; Create temp
-        temp_latdata = new((/64/), double, "No_FillValue")
-
-        ; Get the series
-        do i = 0, 23999
-                do j = 0, 63
-                        temp_latdata(j) = avg(volc(i, :, j))
-                end do
-                volc_global(i) = avg(temp_latdata(:))
-                volc_south(i) = avg(temp_latdata(0:31))
-                volc_north(i) = avg(temp_latdata(32:63))
-        end do
+	do i = 0, 2002
+		ghg(i) = (ch4(i) * 1000) + co2(i) + (n2o(i) * 1000)
+	end do
 
 	; Set workspace
 	output = "png"
@@ -70,7 +60,7 @@ begin
         output@wkHeight = 1080
 	
 	; Draw original series
-        wks = gsn_open_wks(output, "/gpfsES/geo/the/MocArchieve/ALL/Original_Series")
+        wks = gsn_open_wks(output, "/gpfsES/geo/the/MocArchieve/ANTH/Original_Series")
 
         resL = True
         resL@tiMainString = "Maximum of MOC (Original)"
@@ -84,20 +74,18 @@ begin
 	resL@vpXF = 0.15
 
 	resR = True
-	resR@tiYAxisString = "Volcanic Aerosol Mass Mixing Ratio"
-        resR@trYMinF = 0
-        resR@trYMaxF = 0.00000008
+	resR@tiYAxisString = "Greenhouse Gases (1e-6 mol/mol)"
         resR@trXMinF = 0
         resR@trXMaxF = 2000
         resR@xyLineColors = "red"
 
-        plot = gsn_csm_x2y2(wks, time, time2, annual_max, volc_global, resL, resR)
+        plot = gsn_csm_xy2(wks, time, annual_max, ghg(:1999), resL, resR)
 
 	; Smooth
 	annual_sm = runave(annual_max, 31, 0)	
 
 	; Draw smooth series
-	wks2 = gsn_open_wks(output, "/gpfsES/geo/the/MocArchieve/ALL/Smooth_Series")
+	wks2 = gsn_open_wks(output, "/gpfsES/geo/the/MocArchieve/ANTH/Smooth_Series")
 
 	resL2 = True
 	resL2@tiMainString = "Maximum of MOC (Smooth)"
@@ -106,19 +94,17 @@ begin
 	resL2@xyLineColors = "blue"
 	resL2@vpHeightF = 0.43
 	resL2@vpWidthF = 0.65
-        resL2@trXMinF = 0
+	resL2@trXMinF = 0
         resL2@trXMaxF = 2000
 	resL2@vpXF = 0.15
 
 	resR2 = True
-	resR2@tiYAxisString = "Volcanic Aerosol Mass Mixing Ratio"
-        resR2@trYMinF = 0
-        resR2@trYMaxF = 0.00000008
+	resR2@tiYAxisString = "Greenhouse Gases (1e-6 mol/mol)"
         resR2@trXMinF = 0
         resR2@trXMaxF = 2000
         resR2@xyLineColors = "red"
 	
-	plot2 = gsn_csm_x2y2(wks2, time, time2, annual_sm, volc_global, resL2, resR2)
+	plot2 = gsn_csm_xy2(wks2, time, annual_sm, ghg(:1999), resL2, resR2)
 
 	; Calculate wavelet
 	w = wavelet_default(annual_max, 0)
@@ -126,7 +112,7 @@ begin
 	; Draw wavelet transform
 	map = new(2,graphic)
 	
-        wks3 = gsn_open_wks(output, "/gpfsES/geo/the/MocArchieve/ALL/Wavelet_Transform")
+        wks3 = gsn_open_wks(output, "/gpfsES/geo/the/MocArchieve/ANTH/Wavelet_Transform")
 
         res3 = True
         res3@tiMainString = "Wavelet Transform"
@@ -142,8 +128,6 @@ begin
 	map(0) = gsn_csm_contour(wks3,w(0,:,:),res3) 
 
 	res4 = True
-        res4@trYMinF = 0
-        res4@trYMaxF = 0.00000008
         res4@xyLineColors = "red"
 	res4@vpHeightF = 0.1
         res4@vpWidthF = 0.65
@@ -151,7 +135,7 @@ begin
         res4@trXMaxF = 2000
 	res4@vpXF = 0.15
 
-	map(1) = gsn_xy(wks3, time2, volc_global, res4)
+	map(1) = gsn_xy(wks3, time(:1999), ghg(:1999), res4)
         
 	yres = True
 

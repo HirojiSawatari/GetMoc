@@ -2,6 +2,8 @@
 ;load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
                 
 begin 
+	; 1, do bias correction to the wavelet powers
+        bias_correct = 1
 
 	; Create new varible to save annual maximum data
 	annual_max = new((/2000/), float, "No_FillValue")
@@ -109,6 +111,20 @@ begin
 	; Calculate wavelet
 	w = wavelet_default(annual_max, 0)
 
+	; Create coordinate arrays for plot
+        dt = 1
+        s0 = 2 * dt
+        dj = 0.25
+        N = dimsizes(annual_max)
+        jtot = 1 + floattointeger(((log(N * dt / s0)) / dj) / log(2.))
+        power = onedtond(w@power, (/jtot, N/))
+        power!0 = "period"                        ; Y axis
+        power&period = w@period
+        power!1 = "time"                          ; X axis
+        power&time = time
+        power@long_name = "Power Spectrum"
+        power@units = "Sv^2"
+
 	; Draw wavelet transform
 	map = new(2,graphic)
 	
@@ -117,15 +133,20 @@ begin
         res3 = True
         res3@tiMainString = "Wavelet Transform"
 	res3@cnFillOn = True
-	res3@trYReverse = True
+	; res3@trYReverse = True
 	res3@gsnSpreadColors = True
 	res3@gsnSpreadColorStart = 24
 	res3@gsnSpreadColorEnd = -26
         res3@vpHeightF = 0.43
         res3@vpWidthF = 0.65
 	res3@vpXF = 0.15
+        res3@tiYAxisString = "Period (year)"
+        res3@trYMinF = 1
+        res3@trYMaxF = 500
+        res3@trGridType = "TriangularMesh"      ; This option has to be set to make the grid appear regular
+        res3@cnLevelSelectionMode = "ManualLevels"
 
-	map(0) = gsn_csm_contour(wks3,w(0,:,:),res3) 
+	map(0) = gsn_csm_contour(wks3, power, res3) 
 
 	res4 = True
         res4@xyLineColors = "red"

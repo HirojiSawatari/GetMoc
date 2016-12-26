@@ -1,11 +1,11 @@
 #!/bin/bash
 
-echo "-------------------------------------------------------------------------------------------------------"
-echo "|                                            GetMoc V1.0                                              |"
-echo "| Get meridional overturning circulation (MOC) from MASK and calculate the annual mean series of MOC. |"
-echo "| See https://github.com/HirojiSawatari/GetMoc for more details.                                      |"
-echo "| Copyright (C) 2016 Tou Ka All Rights Reserved                                                       |"
-echo "-------------------------------------------------------------------------------------------------------"
+echo "---------------------------------------------------------------------------------------------------------------"
+echo "|                                               GetMoc V1.0                                                   |"
+echo "| Get the meridional overturning circulation (MOC) from MASK and calculate the annual mean series of the MOC. |"
+echo "| See https://github.com/HirojiSawatari/GetMoc for more details.                                              |"
+echo "| Copyright (C) 2016 Tou Ka All Rights Reserved                                                               |"
+echo "---------------------------------------------------------------------------------------------------------------"
 
 path="/gpfsES/geo/the/MocArchieve"
 

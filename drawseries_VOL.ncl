@@ -87,7 +87,7 @@ begin
 
 	resR = True
 	resR@tiYAxisString = "Volcanic Aerosol Mass Mixing Ratio"
-        resR@trYMinF = 0
+        resR@trYMinF = -0.00000002
         resR@trYMaxF = 0.00000008
         resR@trXMinF = 500
         resR@trXMaxF = 2000
@@ -114,7 +114,7 @@ begin
 
 	resR2 = True
 	resR2@tiYAxisString = "Volcanic Aerosol Mass Mixing Ratio"
-        resR2@trYMinF = 0
+        resR2@trYMinF = -0.00000002
         resR2@trYMaxF = 0.00000008
 	resR2@trXMinF = 500
         resR2@trXMaxF = 2000

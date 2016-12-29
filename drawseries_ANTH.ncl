@@ -1,6 +1,8 @@
-;load "$NCARG_ROOT/lib/ncarg/nclex/gsun/gsn_code.ncl"
-;load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
-                
+load "$NCARG_ROOT/lib/ncarg/nclex/gsun/gsn_code.ncl"
+load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
+load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
+load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/shea_util.ncl"
+
 begin 
 	; 1, do bias correction to the wavelet powers
         bias_correct = 1
@@ -73,6 +75,8 @@ begin
         resL@vpWidthF = 0.65
 	resL@trXMinF = 0
         resL@trXMaxF = 2000
+        resL@trYMinF = 14
+        resL@trYMaxF = 23
 	resL@vpXF = 0.15
 
 	resR = True
@@ -98,6 +102,8 @@ begin
 	resL2@vpWidthF = 0.65
 	resL2@trXMinF = 0
         resL2@trXMaxF = 2000
+        resL2@trYMinF = 15
+        resL2@trYMaxF = 21
 	resL2@vpXF = 0.15
 
 	resR2 = True
@@ -125,41 +131,45 @@ begin
         power@long_name = "Power Spectrum"
         power@units = "Sv^2"
 
+	; Correct bias
+        if (bias_correct .eq. 1) then
+                power = power / conform(power, w@scale, 0)
+        end if
+
+        ; Compute significance ( >= 1 is significant)
+        SIG = power
+        SIG = power / conform(power, w@signif, 0)
+
 	; Draw wavelet transform
-	map = new(2,graphic)
-	
-        wks3 = gsn_open_wks(output, "/gpfsES/geo/the/MocArchieve/ANTH/Wavelet_Transform")
+	wks3 = gsn_open_wks(output, "/gpfsES/geo/the/MocArchieve/ANTH/Wavelet_Transform")
 
         res3 = True
+        res3@gsnDraw = False
+        res3@gsnFrame = False
         res3@tiMainString = "Wavelet Transform"
-	res3@cnFillOn = True
-	; res3@trYReverse = True
-	res3@gsnSpreadColors = True
-	res3@gsnSpreadColorStart = 24
-	res3@gsnSpreadColorEnd = -26
+        res3@cnFillOn = True
+        res3@cnLinesOn = False
+        ; res3@trYReverse = True
+        res3@gsnSpreadColors = True
+        res3@gsnSpreadColorStart = 24
+        res3@gsnSpreadColorEnd = -26
+        res3@cnMinLevelValF = 0
+        res3@cnMaxLevelValF = 0.6
+        res3@cnLevelSpacingF = 0.05
         res3@vpHeightF = 0.43
         res3@vpWidthF = 0.65
-	res3@vpXF = 0.15
+        res3@vpXF = 0.15
         res3@tiYAxisString = "Period (year)"
-        res3@trYMinF = 1
+        ; res3@trYMinF = 1
         res3@trYMaxF = 500
-        res3@trGridType = "TriangularMesh"      ; This option has to be set to make the grid appear regular
+        ; res3@trGridType = "TriangularMesh"    ; This option has to be set to make the grid appear regular
         res3@cnLevelSelectionMode = "ManualLevels"
 
-	map(0) = gsn_csm_contour(wks3, power, res3) 
+        plot3 = gsn_csm_contour(wks3, power, res3)
 
-	res4 = True
-        res4@xyLineColors = "red"
-	res4@vpHeightF = 0.1
-        res4@vpWidthF = 0.65
-        res4@trXMinF = 0
-        res4@trXMaxF = 2000
-	res4@vpXF = 0.15
-
-	map(1) = gsn_xy(wks3, time(:1999), ghg(:1999), res4)
-        
-	yres = True
-
-	gsn_panel(wks3, map, (/2, 1/), yres)
+        res33 = True
+        plot3 = ShadeCOI(wks3, plot3, w, time, res33)
+        draw(plot3)
+        frame(wks3)
 
 end

@@ -1,5 +1,5 @@
-;load "$NCARG_ROOT/lib/ncarg/nclex/gsun/gsn_code.ncl"
-;load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
+load "$NCARG_ROOT/lib/ncarg/nclex/gsun/gsn_code.ncl"
+load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 
 begin
 

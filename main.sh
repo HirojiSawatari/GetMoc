@@ -30,6 +30,9 @@ bash vol-moc.sh
 # Start create AMOC of ANTH
 bash anth-moc.sh
 
+# Start create AMOC of Ctrl
+bash ctrl-moc.sh
+
 # Start create AMO of ALL
 bash all-ssh.sh
 

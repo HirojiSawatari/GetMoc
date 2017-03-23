@@ -115,4 +115,62 @@ begin
 	
 	plot2 = gsn_csm_xy2(wks2, time, annual_sm, annual_sm2, resL2, resR2)
 
+	; Calculate wavelet
+        w = wavelet_default(annual_ave, 0)
+
+        ; Create coordinate arrays for plot
+        dt = 1
+        s0 = 2 * dt
+        dj = 0.25
+        N = dimsizes(annual_ave)
+        jtot = 1 + floattointeger(((log(N * dt / s0)) / dj) / log(2.))
+        power = onedtond(w@power, (/jtot, N/))
+        power!0 = "period"                        ; Y axis
+        power&period = w@period
+        power!1 = "time"                          ; X axis
+        power&time = time
+        power@long_name = "Power Spectrum"
+        power@units = "Sv^2"
+
+        ; Correct bias
+        if (bias_correct .eq. 1) then
+                power = power / conform(power, w@scale, 0)
+        end if
+
+        ; Compute significance ( >= 1 is significant)
+        SIG = power
+        SIG = power / conform(power, w@signif, 0)
+
+        ; Draw wavelet transform
+        wks3 = gsn_open_wks(output, "/gpfsES/geo/the/MocArchieve/ALL-SST/Wavelet_Transform")
+
+	res3 = True
+        res3@gsnDraw = False
+        res3@gsnFrame = False
+        res3@tiMainString = "Wavelet Transform"
+        res3@cnFillOn = True
+        res3@cnLinesOn = False
+        ; res3@trYReverse = True
+        res3@gsnSpreadColors = True
+        res3@gsnSpreadColorStart = 24
+        res3@gsnSpreadColorEnd = -26
+        ;res3@cnMinLevelValF = 0
+        ;res3@cnMaxLevelValF = 0.6
+        ;res3@cnLevelSpacingF = 0.05
+        res3@vpHeightF = 0.43
+        res3@vpWidthF = 0.65
+        res3@vpXF = 0.15
+        res3@tiYAxisString = "Period (year)"
+        ; res3@trYMinF = 1
+        res3@trYMaxF = 500
+        ; res3@trGridType = "TriangularMesh"    ; This option has to be set to make the grid appear regular
+        res3@cnLevelSelectionMode = "ManualLevels"
+
+        plot3 = gsn_csm_contour(wks3, power, res3)
+
+        res33 = True
+        plot3 = ShadeCOI(wks3, plot3, w, time, res33)
+        draw(plot3)
+        frame(wks3)
+
 end
